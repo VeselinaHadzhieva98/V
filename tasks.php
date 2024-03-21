@@ -16,8 +16,18 @@ if (isset($_POST['send'])) {
         echo "<script>alert('Ticket Genrated'); location.replace(document.referrer)</script>";
     }
 }
-?>
 
+if (isset($_GET['/delete/id'])) {
+    $id = $_GET['/delete/id'];
+    $delete = mysqli_query($con, "DELETE FROM `tasks` WHERE `id`='$id'");
+}
+if (isset($_GET['/done/id'])) {
+    $id = $_GET['/done/id'];
+    $delete = mysqli_query($con, "UPDATE `tasks` SET `status`='Done' WHERE `id`='$id'");
+}
+
+$TodaysDate = date('Y-m-d');
+?>
 <!DOCTYPE html>
 <html>
 
@@ -69,17 +79,15 @@ if (isset($_POST['send'])) {
                         <form class="form-horizontal" name="form1" method="post" action="" onSubmit="return valid();">
                             <div class="panel panel-default">
                                 <div class="panel-body bg-white">
-                                    <?php if (isset($_SESSION['msg1'])): ?>
-                                    <p text-align="center" style="color:#FF0000"><?=$_SESSION['msg1'];?><?=$_SESSION['msg1']="";?></p>
+                                    <?php if (isset($_SESSION['msg1'])) : ?>
+                                        <p text-align="center" style="color:#FF0000"><?= $_SESSION['msg1']; ?><?= $_SESSION['msg1'] = ""; ?></p>
                                     <?php endif; ?>
                                     <div class="form-group">
                                         <label class="col-md-3 col-xs-12 control-label">Title</label>
                                         <div class="col-md-6 col-xs-12">
                                             <div class="input-group">
-                                                <span class="input-group-addon"><span
-                                                        class="fa fa-pencil"></span></span>
-                                                <input type="text" name="title" id="title" value="" required
-                                                    class="form-control" />
+                                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                                <input type="text" name="title" id="title" value="" required class="form-control" />
                                             </div>
 
                                         </div>
@@ -89,8 +97,7 @@ if (isset($_POST['send'])) {
                                     <div class="form-group">
                                         <label class="col-md-3 col-xs-12 control-label">Description</label>
                                         <div class="col-md-6 col-xs-12">
-                                            <textarea name="description" required class="form-control"
-                                                rows="5"></textarea>
+                                            <textarea name="description" required class="form-control" rows="5"></textarea>
 
                                         </div>
                                     </div>
@@ -99,24 +106,12 @@ if (isset($_POST['send'])) {
                                         <label class="col-md-3 col-xs-12 control-label">Due </label>
                                         <div class="col-md-6 col-xs-12">
                                             <div class="input-group">
-                                                <input type="date" name="due" id="due" value="" required
-                                                    class="form-control" />
+                                                <input type="date" name="due" id="due" value="<?php echo date('Y-m-d'); ?>" required class="form-control" />
                                             </div>
-
                                         </div>
-
                                     </div>
-
-
-
-
                                 </div>
-
-
-
-
                             </div>
-
                             <div class="panel-footer">
                                 <button class="btn btn-default">Clear Form</button>
                                 <input type="submit" value="Create" name="send" class="btn btn-primary pull-right">
@@ -132,12 +127,14 @@ if (isset($_POST['send'])) {
                                 <?php echo $deleteMsg ?? ''; ?>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
-                                    <caption>Monthly tasks</caption>
+                                        <caption>Monthly tasks</caption>
                                         <tr>
                                             <th>TO DO</th>
                                             <th>DESCRIPTION</th>
                                             <th>DUE</th>
                                             <th>STATUS</th>
+                                            <th>ACTION</th>
+                                            <th>REMOVE</th>
                                         </tr>
                                         <?php
 
@@ -147,13 +144,20 @@ if (isset($_POST['send'])) {
                                                 $field2name = $row["description"];
                                                 $field3name = $row["due"];
                                                 $field4name = $row["status"];
+                                                $field5name = $row["id"];
 
-                                                echo '<tr> 
-                        <td>' . $field1name . '</td> 
-                        <td>' . $field2name . '</td> 
-                        <td>' . $field3name . '</td> 
-                        <td>' . $field4name . '</td> 
-                    </tr>';
+                                                echo "<tr>
+                                                    <td>" . $field1name . "</td>
+                                                    <td>" . $field2name . "</td>
+                                                    <td>" . $field3name . "</td>
+                                                    <td>" . $field4name . "</td>
+                                                    <td>
+                                                        <a href='tasks.php?/done/id=" . $field5name . "'class='btn'>Done</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href='tasks.php?/delete/id=" . $field5name . "'class='btn'>Delete</a>
+                                                    </td>
+                                                </tr>";
                                             }
                                             $result->free();
                                         }
@@ -173,12 +177,14 @@ if (isset($_POST['send'])) {
                                 <?php echo $deleteMsg ?? ''; ?>
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
-                                    <caption>Open tasks from previous months</caption>
+                                        <caption>Open tasks from previous months</caption>
                                         <tr>
                                             <th>TO DO</th>
                                             <th>DESCRIPTION</th>
                                             <th>DUE</th>
                                             <th>STATUS</th>
+                                            <th>ACTION</th>
+                                            <th>REMOVE</th>
                                         </tr>
                                         <?php
 
@@ -188,22 +194,24 @@ if (isset($_POST['send'])) {
                                                 $field2name = $row["description"];
                                                 $field3name = $row["due"];
                                                 $field4name = $row["status"];
+                                                $field5name = $row["id"];
 
-                                                echo '<tr> 
-                        <td>' . $field1name . '</td> 
-                        <td>' . $field2name . '</td> 
-                        <td>' . $field3name . '</td> 
-                        <td>' . $field4name . '</td> 
-                    </tr>';
+                                                echo "<tr>
+                                                    <td>" . $field1name . "</td>
+                                                    <td>" . $field2name . "</td>
+                                                    <td>" . $field3name . "</td>
+                                                    <td>" . $field4name . "</td>
+                                                    <td>
+                                                        <a href='tasks.php?/done/id=" . $field5name . "'class='btn'>Done</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href='tasks.php?/delete/id=" . $field5name . "'class='btn'>Delete</a>
+                                                    </td>
+                                                </tr>";
                                             }
                                             $result->free();
                                         }
                                         ?>
-
-
-
-
-
                                 </div>
                             </div>
                         </div>
