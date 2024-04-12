@@ -17,9 +17,16 @@ if (isset($_POST['send'])) {
     $account = $_POST['account'];
     $pdate = date('Y-m-d H:i:s');
     $a = mysqli_query($con, "insert into transactions(email,type,category,description,date,amount,account,created)  values('$email','$type','$category','$description','$tdate','$amount','$account','$pdate')");
-    if ($a) {
-        echo "<script>alert('Ticket Genrated'); location.replace(document.referrer)</script>";
-    }
+   
+}
+if (isset($_POST['add'])) {
+
+   
+    $typecategory = $_POST['typecategory'];
+    $newcategory = $_POST['newcategory'];
+
+    $b = mysqli_query($con, "insert into category(type,name)  values('$typecategory','$newcategory')");
+  
 }
 
 ?>
@@ -44,6 +51,52 @@ if (isset($_POST['send'])) {
     <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/responsive.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/custom-icon-set.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        /* Button used to open the contact form - fixed at the bottom of the page */
+        .open-button {
+            background-color: #555;
+            color: white;
+            padding: 10px 10px;
+            border: none;
+            cursor: pointer;
+            opacity: 0.4;
+            position: fixed;
+            right: 28px;
+            width: 200px;
+        }
+
+        /* The popup form - hidden by default */
+        .form-popup {
+            display: none;
+            position: fixed;
+            right: 15px;
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+        }
+
+        /* Full-width input fields */
+        .form-container select[name=typecategory],
+        .form-container input[type=newcategory] {
+            padding: 10px;
+            margin: 10px 0 32px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+            max-width: 350px;
+            padding: 15px;
+            background-color: white;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover,
+        .open-button:hover {
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body class="">
@@ -69,6 +122,39 @@ if (isset($_POST['send'])) {
         <div class="content">
             <div class="page-title">
                 <h3>Create transaction</h3>
+
+                <!-- Popup form -->
+
+                <!-- A button to open the popup form -->
+                <button class="open-button" onclick="openForm()">Add new category</button>
+
+                <!-- The form -->
+                <div class="form-popup" id="myForm">
+                    <form class="form-container" method="post" action="" onSubmit="return valid();">
+                        <h1>Add new category</h1>
+                       
+                        <label>Type</label>
+                        
+                            <select name="typecategory" class="form-control select">
+                                <option value="Income">Income</option>
+                                <option value="Expenditure">Expenditure</option>
+                            </select>
+                        
+                       
+                        <label>Category</label>
+                        
+                            <input type="newcategory" name="newcategory" id="newcategory" value="" required class="form-control" />
+                         
+
+                        <input type="submit" name="add" value="Add" class="btn btn-primary pull-right">
+                        <button type="button" class="btn btn-default" onclick="closeForm()">Close</button>
+                    </form>
+                </div>
+
+                <!-- End Popup form -->
+
+
+
                 <div class="row">
                     <div class="col-md-12">
 
@@ -77,7 +163,10 @@ if (isset($_POST['send'])) {
 
                                 <div class="panel-body bg-white">
                                     <?php if (isset($_SESSION['msg1'])): ?>
-                                     <p text-align="center" style="color:#FF0000"><?=$_SESSION['msg1'];?><?=$_SESSION['msg1']="";?></p>
+                                        <p text-align="center" style="color:#FF0000">
+                                            <?= $_SESSION['msg1']; ?>
+                                            <?= $_SESSION['msg1'] = ""; ?>
+                                        </p>
                                     <?php endif; ?>
 
                                     <div class="form-group">
@@ -135,7 +224,6 @@ if (isset($_POST['send'])) {
                                         </div>
 
                                     </div>
-
 
                                     <div class="form-group">
                                         <label class="col-md-3 col-xs-12 control-label">Amount</label>
@@ -208,7 +296,15 @@ if (isset($_POST['send'])) {
     <script src="assets/js/core.js" type="text/javascript"></script>
     <script src="assets/js/chat.js" type="text/javascript"></script>
     <script src="assets/js/demo.js" type="text/javascript"></script>
+    <script>
+        function openForm() {
+            document.getElementById("myForm").style.display = "block";
+        }
 
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+    </script>
 </body>
 
 </html>
