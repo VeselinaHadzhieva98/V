@@ -1,7 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-	İsmail Taşdelen - Security Researcher - Bug Bounty Hunter  -- eidted by me
--->
 <html>
 
 <head>
@@ -13,12 +10,8 @@
 	<meta name="author" content="Veselina Hadzhieva">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-	<link rel="stylesheet" href="assets/css/main.css" />
-	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-	<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-	<link rel="shortcut icon" href="assets/css/images/icon.ico">
-	<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/images/icon.ico" /><![endif]-->
+	<link rel="stylesheet" href="assts/css/main.css" />
+	<link rel="shortcut icon" href="assts/css/images/icon.ico">
 </head>
 
 <body class="Loading">
@@ -41,12 +34,11 @@
 
 			<!-- Footer -->
 			<footer id="footer">
-				<span class="copyright">&copy;Design by <a href="https://html5up.net/aerial"> html5up.net </a>.</span>
+				<span class="copyright">&copy;Design by <a href="https://html5up.net/aerial"> Veselina Hadzhieva </a>.</span>
 			</footer>
 
 		</div>
 	</div>
-	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 	<script>
 		window.onload = function () {
 			document.body.className = '';
