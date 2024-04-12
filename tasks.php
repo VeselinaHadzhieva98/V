@@ -25,6 +25,10 @@ if (isset($_GET['/done/id'])) {
     $id = $_GET['/done/id'];
     $delete = mysqli_query($con, "UPDATE `tasks` SET `status`='Done' WHERE `id`='$id'");
 }
+if (isset($_GET['/inprocess/id'])) {
+    $id = $_GET['/inprocess/id'];
+    $delete = mysqli_query($con, "UPDATE `tasks` SET `status`='In Process' WHERE `id`='$id'");
+}
 
 $TodaysDate = date('Y-m-d');
 ?>
@@ -153,6 +157,7 @@ $TodaysDate = date('Y-m-d');
                                                     <td>" . $field4name . "</td>
                                                     <td>
                                                         <a href='tasks.php?/done/id=" . $field5name . "'class='btn'>Done</a>
+                                                        <a href='tasks.php?/inprocess/id=" . $field5name . "'class='btn'>In process</a>
                                                     </td>
                                                     <td>
                                                         <a href='tasks.php?/delete/id=" . $field5name . "'class='btn'>Delete</a>
@@ -203,6 +208,7 @@ $TodaysDate = date('Y-m-d');
                                                     <td>" . $field4name . "</td>
                                                     <td>
                                                         <a href='tasks.php?/done/id=" . $field5name . "'class='btn'>Done</a>
+                                                        <a href='tasks.php?/inprocess/id=" . $field5name . "'class='btn'>In process</a>
                                                     </td>
                                                     <td>
                                                         <a href='tasks.php?/delete/id=" . $field5name . "'class='btn'>Delete</a>
