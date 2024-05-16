@@ -3,6 +3,18 @@ session_start();
 include("dbconnection.php");
 include("checklogin.php");
 check_login();
+// 1.query do bazata, za da vezmesh vsichki redove ot poslednite 2 godini    
+// ****  get from transaction  where((created_at.year = current_year))  **** result = 2024
+// 2. type_id=income
+$dataPoints = array(
+    array("y" => 2000.00, "label" => "2019"),
+    array("y" => 2435.94, "label" => "2020"),
+    array("y" => 1842.55, "label" => "China"),
+    array("y" => 1828.55, "label" => "Russia"),
+    array("y" => 1039.99, "label" => "Switzerland"),
+    array("y" => 765.215, "label" => "Japan"),
+    array("y" => 612.453, "label" => "Netherlands")
+);
 if (isset($_POST['send'])) {
     $count_my_page = ("hitcounter.txt");
     $hits = file($count_my_page);
@@ -23,6 +35,12 @@ if (isset($_POST['send'])) {
     }
 }
 ?>
+
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -84,135 +102,47 @@ if (isset($_POST['send'])) {
             </div>
 
 
-            <!-- START MONTHLY DASHBOARD CHART FOR CY -->
+            <!-- START MONTHLY DASHBOARD CHART -->
 
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
             <script type="text/javascript">
-                google.charts.load('current', {
-                    'packages': ['bar']
-                });
-                google.charts.setOnLoadCallback(drawChart);
+                window.onload = function() {
 
-                function drawChart() {
-                    var data = google.visualization.arrayToDataTable([
-                        ['Year', 'Sales', 'Expenses'],
-                        ['2014', 1000, 400],
-                        ['2015', 1170, 460],
-                        ['2016', 660, 1120],
-                        ['2017', 1030, 540]
-                    ]);
-
-                    var options = {
-                        chart: {
-                            title: 'Montly report for current year',
-                            subtitle: 'Sales and Expenses',
+                    var chart = new CanvasJS.Chart("chartContainer", {
+                        animationEnabled: true,
+                        theme: "light2",
+                        title: {
+                            text: "Yearly expenses"
                         },
-                        bars: 'vertical' // Required for Material Bar Charts.
-                    };
+                        axisY: {
+                            title: "Amount"
+                        },
+                        data: [{
+                            type: "column",
+                            yValueFormatString: "#,##0.## tonnes",
+                            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                        }]
+                    });
+                    chart.render();
 
-                    var chart = new google.charts.Bar(document.getElementById('barchart_material'));
-
-                    chart.draw(data, google.charts.Bar.convertOptions(options));
                 }
             </script>
 
-            <div id="barchart_material" style="width: 900px; height: 500px;"></div>
+            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+            <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 
             <!-- END DASHBOARD CHART -->
 
 
-            <!-- START MONTHLY DASHBOARD CHART FOR LY -->
-            <div class="content sm-gutter">
-                <?php
-
-                $dataPoints1 = array(
-                    array("label" => "January", "y" => 36.12),
-                    array("label" => "February", "y" => 34.87),
-                    array("label" => "March", "y" => 40.30),
-                    array("label" => "April", "y" => 35.30),
-                    array("label" => "May", "y" => 39.50),
-                    array("label" => "June", "y" => 50.82),
-                    array("label" => "July", "y" => 74.70),
-                    array("label" => "August", "y" => 50.82),
-                    array("label" => "September", "y" => 50.82),
-                    array("label" => "October", "y" => 50.82),
-                    array("label" => "November", "y" => 50.82),
-                    array("label" => "December", "y" => 50.82)
-                );
-                $dataPoints2 = array(
-                    array("label" => "January", "y" => 64.61),
-                    array("label" => "February", "y" => 70.55),
-                    array("label" => "March", "y" => 72.50),
-                    array("label" => "April", "y" => 81.30),
-                    array("label" => "May", "y" => 63.60),
-                    array("label" => "June", "y" => 69.38),
-                    array("label" => "July", "y" => 98.70),
-                    array("label" => "August", "y" => 50.82),
-                    array("label" => "September", "y" => 50.82),
-                    array("label" => "Octomber", "y" => 50.82),
-                    array("label" => "November", "y" => 50.82),
-                    array("label" => "December", "y" => 50.82)
-                );
-
-                ?>
-                <script>
-                    window.onload = function() {
-
-                        var chart = new CanvasJS.Chart("chartContainer", {
-                            animationEnabled: true,
-                            theme: "light2",
-                            title: {
-                                text: "Montly report for last year"
-                            },
-                            axisY: {
-                                includeZero: true
-                            },
-                            legend: {
-                                cursor: "pointer",
-                                verticalAlign: "center",
-                                horizontalAlign: "right",
-                                itemclick: toggleDataSeries
-                            },
-                            data: [{
-                                type: "column",
-                                name: "Incomes",
-                                indexLabel: "{y}",
-                                yValueFormatString: "$#0.##",
-                                showInLegend: true,
-                                dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
-                            }, {
-                                type: "column",
-                                name: "Expenditures",
-                                indexLabel: "{y}",
-                                yValueFormatString: "$#0.##",
-                                showInLegend: true,
-                                dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
-                            }]
-                        });
-                        chart.render();
-
-                        function toggleDataSeries(e) {
-                            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                e.dataSeries.visible = false;
-                            } else {
-                                e.dataSeries.visible = true;
-                            }
-                            chart.render();
-                        }
-
-                    }
-                </script>
-
-                <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-                <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-
-
-            </div>
-            <!-- END DASHBOARD CHART -->
-
+        
 
 
         </div>
+        <!-- END DASHBOARD CHART -->
+
+
+
+    </div>
     </div>
     <!-- BEGIN CHAT -->
 
